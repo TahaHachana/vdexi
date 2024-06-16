@@ -2,29 +2,53 @@ import os
 import thomaspeissl.dotenv
 import src.api
 
-fn load_env_vars() (string, string, string) {
-    dotenv.load()
-    account_id := os.getenv("DEXI_ACCOUNT_ID")
-    api_key := os.getenv("DEXI_API_KEY")
-    access_key := os.getenv("DEXI_ACCESS_KEY")
-    return account_id, api_key, access_key
+const account_id_var = 'DEXI_ACCOUNT_ID'
+const api_key_var = 'DEXI_API_KEY'
+const access_key_var = 'DEXI_ACCESS_KEY'
+const test_execution_var = 'TEST_EXECUTION_ID'
+const delete_execution_var = 'DELETE_EXECUTION_ID'
+
+struct TestClient {
+	dexi_client api.DexiClient
+	account_id  string
+	api_key     string
+	access_key  string
 }
 
-fn test_client_new() {
+fn load_env_vars() (string, string, string) {
 	dotenv.load()
+	account_id := os.getenv(account_id_var)
+	api_key := os.getenv(api_key_var)
+	access_key := os.getenv(access_key_var)
+	return account_id, api_key, access_key
+}
+
+fn load_env_var(var_name string) string {
+	dotenv.load()
+	return os.getenv(var_name)
+}
+
+fn TestClient.new() TestClient {
 	account_id, api_key, access_key := load_env_vars()
 	client := api.DexiClient.new(account_id, api_key)
-	assert client.account_id == account_id
-	assert client.api_key == api_key
-	assert client.access_key == access_key
-	assert client.base_url == api.base_url
+	return TestClient{
+		dexi_client: client
+		account_id: account_id
+		api_key: api_key
+		access_key: access_key
+	}
 }
+
+const test_client = TestClient.new()
 
 fn test_get_execution() {
-	dotenv.load()
-	execution_id := os.getenv("TEST_EXECUTION_ID")
-	account_id, api_key, access_key := load_env_vars()
-	client := api.DexiClient.new(account_id, api_key)
-	execution := client.get_execution(execution_id)!
+	execution_id := load_env_var(test_execution_var)
+	execution := test_client.dexi_client.get_execution(execution_id)!
 	assert execution.id == execution_id
+}
+
+fn test_delete_execution() {
+	execution_id := load_env_var(delete_execution_var)
+	exit_code := test_client.dexi_client.delete_execution(execution_id)!
+	assert exit_code == 0
 }

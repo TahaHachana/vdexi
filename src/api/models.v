@@ -31,7 +31,7 @@ pub:
 	run_id   string
 }
 
-pub fn (r RawExecution) from_raw_execution() Execution {
+pub fn (r RawExecution) to_execution() Execution {
 	state := match r.state {
 		'QUEUED' { ExecutionState.queued }
 		'PENDING' { ExecutionState.pending }
@@ -45,7 +45,7 @@ pub fn (r RawExecution) from_raw_execution() Execution {
 		id: r.id
 		state: state
 		starts: time.unix(r.starts / 1000)
-		finished: utils.parse_unix_milliseconds(r.finished)
+		finished: utils.try_parse_unix_milliseconds(r.finished)
 		robot_id: r.robot_id
 		run_id: r.run_id
 	}

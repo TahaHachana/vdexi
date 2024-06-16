@@ -22,10 +22,21 @@ fn DexiClient.new(account_id string, api_key string) DexiClient {
 	}
 }
 
+// Returns the id, state, start and finish time of an execution.
 pub fn (d DexiClient) get_execution(execution_id string) !Execution {
-	url := d.base_url + '/executions/' + execution_id
-	resp := utils.get_request(url, d.access_key, d.account_id)!
-	rawe := json.decode(RawExecution, resp) or { panic('Failed to decode response: ${resp}') }
-	e := rawe.from_raw_execution()
-	return e
+	request_url := '${d.base_url}/executions/${execution_id}'
+	resp := utils.get_request(request_url, d.access_key, d.account_id) or { panic(err) }
+
+	raw_execution := json.decode(RawExecution, resp) or {
+		return error('Failed to parse the execution data: ${err}')
+	}
+
+	return raw_execution.to_execution()
+}
+
+// Deletes an execution permanently.
+pub fn (d DexiClient) delete_execution(execution_id string) !int {
+    request_url := '${d.base_url}/executions/${execution_id}'
+    utils.delete_request(request_url, d.access_key, d.account_id) or { panic(err) }
+    return 0
 }

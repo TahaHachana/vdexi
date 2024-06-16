@@ -1,4 +1,4 @@
-module utils
+module vdexi
 
 import net.http
 
@@ -10,8 +10,8 @@ fn build_request(method http.Method, request_url string, access_key string, acco
 		method: method
 		url: request_url
 	}
-	req.add_custom_header(utils.access_header, access_key) or { panic(err) }
-	req.add_custom_header(utils.account_header, account_id) or { panic(err) }
+	req.add_custom_header(access_header, access_key) or { panic(err) }
+	req.add_custom_header(account_header, account_id) or { panic(err) }
 	return req
 }
 

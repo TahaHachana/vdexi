@@ -1,6 +1,6 @@
 import os
 import thomaspeissl.dotenv
-import src.api
+import vdexi
 
 const account_id_var = 'DEXI_ACCOUNT_ID'
 const api_key_var = 'DEXI_API_KEY'
@@ -9,7 +9,7 @@ const test_execution_var = 'TEST_EXECUTION_ID'
 const delete_execution_var = 'DELETE_EXECUTION_ID'
 
 struct TestClient {
-	dexi_client api.DexiClient
+	dexi_client vdexi.DexiClient
 	account_id  string
 	api_key     string
 	access_key  string
@@ -30,7 +30,7 @@ fn load_env_var(var_name string) string {
 
 fn TestClient.new() TestClient {
 	account_id, api_key, access_key := load_env_vars()
-	client := api.DexiClient.new(account_id, api_key)
+	client := vdexi.DexiClient.new(account_id, api_key)
 	return TestClient{
 		dexi_client: client
 		account_id: account_id

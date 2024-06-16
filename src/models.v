@@ -1,7 +1,6 @@
-module api
+module vdexi
 
 import time
-import utils
 
 struct RawExecution {
 	id       string @[json: '_id']
@@ -45,7 +44,7 @@ pub fn (r RawExecution) to_execution() Execution {
 		id: r.id
 		state: state
 		starts: time.unix(r.starts / 1000)
-		finished: utils.try_parse_unix_milliseconds(r.finished)
+		finished: try_parse_unix_milliseconds(r.finished)
 		robot_id: r.robot_id
 		run_id: r.run_id
 	}

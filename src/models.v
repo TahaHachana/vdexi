@@ -30,26 +30,6 @@ pub:
 	run_id   string
 }
 
-pub fn (r RawExecution) to_execution() Execution {
-	state := match r.state {
-		'QUEUED' { ExecutionState.queued }
-		'PENDING' { ExecutionState.pending }
-		'RUNNING' { ExecutionState.running }
-		'FAILED' { ExecutionState.failed }
-		'STOPPED' { ExecutionState.stopped }
-		else { ExecutionState.ok }
-	}
-
-	return Execution{
-		id: r.id
-		state: state
-		starts: time.unix(r.starts / 1000)
-		finished: try_parse_unix_milliseconds(r.finished)
-		robot_id: r.robot_id
-		run_id: r.run_id
-	}
-}
-
 struct RawExecutionResult {
 	rows       []RawExecution
 	offset     int
@@ -100,4 +80,42 @@ struct GetRunsResponse {
 	rows       []Run
 	offset     int
 	total_rows int
+}
+
+struct RawEvent {
+pub:
+	system  bool
+	user_id string
+	message string
+	created i64
+}
+
+struct Event {
+pub:
+	system  bool
+	user_id string
+	message string
+	created time.Time
+}
+
+struct RawGetEventsResponse {
+pub:
+	id       string     @[json: '_id']
+	state    string
+	starts   i64
+	finished ?i64
+	robot_id string     @[json: 'robotId']
+	run_id   string     @[json: 'runId']
+	events   []RawEvent
+}
+
+struct GetEventsResponse {
+pub:
+	id       string     @[json: '_id']
+	state    string
+	starts   time.Time
+	finished ?time.Time
+	robot_id string     @[json: 'robotId']
+	run_id   string     @[json: 'runId']
+	events   []Event
 }

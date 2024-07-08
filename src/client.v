@@ -50,3 +50,5 @@ pub fn (d DexiClient) get_events(execution_id string) !GetEventsResponse {
 	}
 	return raw_events.to_get_events_response()
 }
+
+// https://app.dexi.io/#/api/sections/executions/getResult

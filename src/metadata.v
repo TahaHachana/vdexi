@@ -1,4 +1,4 @@
-module geometry
+module vdexi
 
 import v.vmod
 

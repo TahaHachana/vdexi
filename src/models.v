@@ -119,3 +119,13 @@ pub:
 	run_id   string     @[json: 'runId']
 	events   []Event
 }
+
+pub enum DexiFormat {
+	json
+	xml
+	csv
+	scsv
+	csv_gz
+	json_gz
+}
+

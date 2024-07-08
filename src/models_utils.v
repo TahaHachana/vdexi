@@ -57,3 +57,14 @@ fn (r RawEvent) to_event() Event {
 		created: time_from_unix_milliseconds(r.created)
 	}
 }
+
+fn (d DexiFormat) str() string {
+    match d {
+        .json { return 'json' }
+		.xml { return 'xml' }
+		.csv { return 'csv' }
+		.scsv { return 'scsv' }
+		.csv_gz { return 'csv.gz' }
+		.json_gz { return 'json.gz' }
+    }
+}

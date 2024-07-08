@@ -51,4 +51,10 @@ pub fn (d DexiClient) get_events(execution_id string) !GetEventsResponse {
 	return raw_events.to_get_events_response()
 }
 
-// https://app.dexi.io/#/api/sections/executions/getResult
+// Get execution result.
+// todo: implement streaming once it's supported by V
+pub fn (d DexiClient) get_result(execution_id string, format DexiFormat) !string {
+	request_url := '${d.base_url}/executions/${execution_id}/result?format=${format}'
+	resp := get_request(request_url, d.access_key, d.account_id) or { panic(err) }
+	return resp
+}

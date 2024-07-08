@@ -59,3 +59,10 @@ const test_client = TestClient.new()
 // 	events := vdexi.test_client.dexi_client.get_events(execution_id)!
 // 	assert events.id == execution_id
 // }
+
+fn test_get_result() {
+	execution_id := load_env_var(test_execution_var)
+	result := test_client.dexi_client.get_result(execution_id, DexiFormat.json)!
+	println(result)
+	assert result == '{"headers":["value","error"],"rows":[["test",null]],"totalRows":1}'
+}
